@@ -59,12 +59,23 @@ try:
         channels.append(channel.text)
         print(channel.text)
 
+    # Find all video links in the search results
+    video_elements = driver.find_elements(By.CSS_SELECTOR, "a#video-title")
+
+    # Get the video links (href attribute)
+    links = []
+    for video_element in video_elements:
+        video_link = video_element.get_attribute("href")
+        links.append(video_link)
+        print(video_link)
+
+
     # Put scraped data in rows, then print them
-    data = list(zip(titles, metadatas, channels))
+    data = list(zip(titles, metadatas, channels, links))
     print(data)
 
     # Insert pairs into workbench table
-    myCursor.executemany("INSERT INTO viddata (Title, ViewsDate, Channel) VALUES (%s, %s, %s)", data)
+    myCursor.executemany("INSERT INTO viddata (Title, ViewsDate, Channel, Link) VALUES (%s, %s, %s, %s)", data)
     connectSQL.commit()
 
 finally:
